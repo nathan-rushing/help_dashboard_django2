@@ -1,0 +1,23 @@
+{% extends "online_help/base.html" %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/documentation_edit.css' %}">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+
+<p><a href="{% url 'online_help:per_subsection_test' writer.pk task.pk %}">← Back to Subsection</a></p>
+<h1>Edit Task</h1>
+
+<!-- Display read-only fields -->
+<p><strong>Writer:</strong> {{ writer.writer_name }}</p>
+<p><strong>Section:</strong> {{ task.section }}</p>
+<p><strong>Subsection:</strong> {{ task.sub_section }}</p>
+<p><strong>SME:</strong> {{ task.SME }}</p>
+<!-- Editable form -->
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Save Changes</button>
+</form>
+
+{% endblock content %}

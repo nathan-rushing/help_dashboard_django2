@@ -1,0 +1,69 @@
+
+
+    <h1>Tasks</h1>
+    <div class="four-boxes">
+        <h1>Group 1: Online Help User Guides</h1>
+        <br>
+        {% for section in section_user_guide %}
+            <h2>{{ section.Section }}</h2>
+            <ul>
+                {% for sub, color, writer in section.subsections %}
+                <li>
+                    {{ sub }} — <strong>Color:</strong> {{ color }}, <strong>Writer:</strong> {{ writer }}
+                </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+
+    </div>
+    <br>
+    <div class="four-boxes">
+        <h1>Group 2: Online Help Reference</h1>
+        <br>
+        {% for section in section_reference %}
+            <h2>{{ section.Section }}</h2>
+            <ul>
+                {% for sub, color, writer in section.subsections %}
+                <li>
+                    {{ sub }} — <strong>Color:</strong> {{ color }}, <strong>Writer:</strong> {{ writer }}
+                </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+
+    </div>
+    <br>
+    <div class="four-boxes">
+        <h1>Group 3: Standalone Tools</h1>
+        <br>
+        {% for section in section_standalone %}
+            <h2>{{ section.Section }}</h2>
+            <ul>
+                {% for sub, color, writer in section.subsections %}
+                <li>
+                    {{ sub }} — <strong>Color:</strong> {{ color }}, <strong>Writer:</strong> {{ writer }}
+                </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+
+    </div>
+    <br>
+    <div class="four-boxes">
+        <h1>Group 4: PDF Documents</h1>
+        <br>
+        {% for section in section_pdf %}
+            <h2>{{ section.Section }}</h2>
+            <ul>
+                {% for sub, color, writer in section.subsections %}
+                <li>
+                    {{ sub }} — <strong>Color:</strong> {{ color }}, <strong>Writer:</strong> {{ writer }}
+                </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+
+    </div>
+
+{% endblock content %}
+

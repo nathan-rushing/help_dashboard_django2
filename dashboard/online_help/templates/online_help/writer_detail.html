@@ -1,0 +1,11 @@
+<!-- ang writer_detail.html ay katumbas ng per_user -->
+<h1>{{ writer.writer_name }}</h1>
+
+<h2>Tasks:</h2>
+<ul>
+  {% for taskwriter in tasks %}
+    <li>{{ taskwriter.task.document }} - {{ taskwriter.task.section }} - {{ taskwriter.task.comments }}</li>
+  {% empty %}
+    <li>No tasks assigned.</li>
+  {% endfor %}
+</ul>

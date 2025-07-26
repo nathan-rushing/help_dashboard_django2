@@ -1,0 +1,46 @@
+{% extends "online_help/base.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/documentation_edit.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<p><a href="{% url 'online_help:per_documentation_test' document_pk=document_pk %}">← Back to Section</a></p>
+
+<div class="top-bar bg-warning text-dark card-header mt-5">
+    <h2>Section Editor</h2>
+    <button class="btn btn-outline-dark btn-sm" onclick="showAddForm()">Add Section</button>
+</div>
+
+<div class="doc-list mt-3">
+    {% for section in sections %}
+        <div class="doc-item d-flex justify-content-between align-items-center border p-2 mb-2">
+            <span>{{ section.section }}</span>
+            <form method="post" action="{% url 'online_help:delete_section' document_pk section.section %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-dark btn-sm">Remove</button>
+            </form>
+        </div>
+    {% empty %}
+        <p>No sections found for this document.</p>
+    {% endfor %}
+</div>
+
+<div id="add-doc-form" class="add-form mt-4" style="display: none;">
+    <h3>Add Section</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-outline-dark btn-sm">Submit</button>
+    </form>
+</div>
+
+<script>
+function showAddForm() {
+    const form = document.getElementById('add-doc-form');
+    form.style.display = 'block';
+    form.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+
+{% endblock content %}

@@ -1,0 +1,42 @@
+body {
+    background-color: #f4f4f4 !important;
+    font-family: Arial, sans-serif;
+}
+
+/* h1 {
+    color: #b01616;
+    text-align: center;
+    margin-top: 20px;
+} */
+
+/* .four-boxes {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+} */
+
+
+.scroll-box {
+    max-height: 300px; /* Adjust as needed */
+    overflow-y: auto;
+}
+
+
+.hover-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.hover-link:hover {
+    color: blue;
+    text-decoration: underline;
+}
+
+#searchInput {
+    margin-bottom: 15px;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+

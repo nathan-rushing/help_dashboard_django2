@@ -1,0 +1,143 @@
+{% extends "online_help/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/per_subsection_task.css' %}">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/cssin.css">
+
+<!-- lagay mo sa loob ng href sa taas -->
+ <!-- back to Section dapat -->
+<!-- url 'online_help:per_section_test' document_pk=document_pk section_pk=section_pk -->
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">{{ document_name }} — {{ section_name }} — {{ sub_section_name }}</h4>
+            <button class="btn btn-outline-dark btn-sm" onclick="showAddForm()">Add Writer</button>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <h5 class="text-muted">Writers</h5>
+                {% if task_writers %}
+                    {% for tw in task_writers %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <p class="mb-0"><strong>{{ tw.writer.writer_name }}</strong></p>
+                            <a href="?remove_writer={{ tw.writer.writer_name }}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('Are you sure you want to remove {{ tw.writer.writer_name }}?')">
+                               Remove
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No writers found for this subsection.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    
+    <br>
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Subject Matter Expert (SME)</h5>
+            <!-- <button class="btn btn-outline-dark btn-sm" onclick="showAddSME()">Add SME</button> -->
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <h5 class="text-muted">Experts</h5>
+                {% if sme %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <p class="mb-0" id="sme-display"><strong>{{ sme }}</strong></p>
+                        
+                        <form method="post" id="edit-sme-form" class="form-inline" style="display: none;">
+                            {% csrf_token %}
+                            <input type="hidden" name="edit_sme_form" value="1">
+                            <input type="text" name="sme" class="form-control form-control-sm mr-2" value="{{ sme }}" required>
+                            <button type="submit" class="btn btn-sm btn-success">Save</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="cancelEdit()">Cancel</button>
+                        </form>
+
+                        <div id="sme-buttons">
+                            <!-- <a href="?remove_writer={{ sme }}" class="btn btn-sm btn-danger"
+                            onclick="return confirm('Are you sure you want to remove {{ sme }}?')">
+                                Remove
+                            </a> -->
+                            <button class="btn btn-sm btn-primary ml-2" onclick="editSME()">Edit</button>
+                        </div>
+                    </div>
+
+                {% else %}
+                    <p class="text-muted">No SME assigned for this task.</p>
+                {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="container mt-5">
+        <div id="add-doc-form" class="add-form mt-3" style="display: none;">
+            <h3>Add Writer</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.writer.label_tag }}
+                    {{ form.writer }}
+                </div>
+                <button type="submit" class="btn btn-outline-dark btn-sm">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div id="add-doc-form2" class="add-form mt-3" style="display: none;">
+            <h3>Add SME</h3>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="sme_form" value="1">  <!-- To distinguish this form -->
+                <div class="form-group">
+                    {{ sme_form.sme.label_tag }}
+                    {{ sme_form.sme }}
+                </div>
+                <button type="submit" class="btn btn-outline-dark btn-sm">Submit</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function confirmRemoval(writerName) {
+    if (confirm(`Are you sure you want to remove ${writerName}?`)) {
+        alert(`${writerName} would be removed (if backend was connected).`);
+    }
+}
+
+function showAddForm() {
+    const form = document.getElementById('add-doc-form');
+    form.style.display = 'block';
+    form.scrollIntoView({ behavior: 'smooth' });
+}
+
+function showAddSME() {
+    const form = document.getElementById('add-doc-form2');
+    form.style.display = 'block';
+    form.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+
+<script>
+function editSME() {
+    document.getElementById('sme-display').style.display = 'none';
+    document.getElementById('sme-buttons').style.display = 'none';
+    document.getElementById('edit-sme-form').style.display = 'flex';
+}
+
+function cancelEdit() {
+    document.getElementById('edit-sme-form').style.display = 'none';
+    document.getElementById('sme-display').style.display = 'block';
+    document.getElementById('sme-buttons').style.display = 'block';
+}
+</script>
+
+{% endblock %}

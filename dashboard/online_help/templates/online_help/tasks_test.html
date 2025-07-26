@@ -1,0 +1,95 @@
+{% extends "online_help/base.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
+
+<div class="container mt-4">
+    <div class="p-3 d-flex justify-content-between align-items-start gap-3" style="position: sticky; top: 30px; z-index: 1000;">
+        <input type="text" id="searchInput" class="form-control w-75" placeholder="Search sections or subsections..." onkeyup="filterContent()">
+        <a href="{% url 'online_help:tasks_edit_test' %}" class="btn text-white" style="background-color: #0747a6;">Radiant Documentation</a>
+        <a href="{% url 'online_help:assign_task_test' %}" class="btn text-white" style="background-color: #0747a6;">Assign</a>
+    </div>
+
+    <div class="row">
+        {% for document, tasks in grouped_documents.items %}
+        <div class="col-md-6 mb-4">
+            <div class="bg-light rounded scroll-box">
+                <div class="p-3 text-white text-center" style="background-color: #0747a6;">
+                    <p class="m-0">
+                        {% if tasks %}
+                            <a href="{% url 'online_help:per_documentation_test' tasks.0.task.pk %}" class="hover-link">{{ document }}</a>
+                        {% else %}
+                            <span>{{ document }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="p-2">
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; border: 1px solid #444;">
+                        <thead style="color: #2a4d9b; background-color: #f2f2f2;">
+                            <tr>
+                                <th style="border: 1px solid #444; padding: 8px;">Writer</th>
+                                <th style="border: 1px solid #444; padding: 8px;">Section</th>
+                                <th style="border: 1px solid #444; padding: 8px;">Subsection</th>
+                                <th style="border: 1px solid #444; padding: 8px;">SME</th>
+                                <!-- <th style="border: 1px solid #444; padding: 8px;">Color</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tw in tasks %}
+                            <tr>
+                                <td style="border: 1px solid #444; padding: 8px; background-color: {{ tw.task.color }};">{{ tw.writer.writer_name }}</td>
+                                <td style="border: 1px solid #444; padding: 8px; background-color: {{ tw.task.color }};">
+                                    {{ tw.task.section }}
+                                    <!-- ito sana yan kapag hindi disabled url 'online_help:per_section_test2' tw.task.pk -->
+                                </td>
+                                <td style="border: 1px solid #444; padding: 8px; background-color: {{ tw.task.color }};">
+                                    <a href="{% url 'online_help:per_subsection_task_test2' tw.task.pk %}" class="hover-link">{{ tw.task.sub_section }}</a>
+                                </td>
+                                <td style="border: 1px solid #444; padding: 8px; background-color: {{ tw.task.color }};">{{ tw.task.SME }}</td>
+                                <!-- <td style="border: 1px solid #444; padding: 8px; background-color: tw.task.color ;"> -->
+                                    <!-- tw.task.color  -->
+                                <!-- </td> -->
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted" style="padding: 8px;">No tasks assigned yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<script>
+function filterContent() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const headings = document.querySelectorAll(".scroll-box h5, .scroll-box p");
+    const tables = document.querySelectorAll("table");
+
+    headings.forEach((heading, index) => {
+        const table = tables[index];
+        const rows = table.querySelectorAll("tbody tr");
+        let tableHasMatch = false;
+
+        const headingMatch = heading.innerText.toLowerCase().includes(input);
+
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            const match = text.includes(input);
+            row.style.display = match ? "" : "none";
+            if (match) tableHasMatch = true;
+        });
+
+        heading.style.display = headingMatch || tableHasMatch ? "" : "none";
+        table.style.display = tableHasMatch ? "" : "none";
+    });
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "online_help/base.html" %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/success_documentation.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css>
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="text-success mb-4">Writer Added Successfully!</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Form:</strong> SubSection Submission</li>
+                <li class="list-group-item"><strong>Documentation:</strong> Online Help For User Guides</li>
+                <li class="list-group-item"><strong>Section:</strong> Getting Started</li>
+                <li class="list-group-item"><strong>Subsection:</strong> Introduction </li>
+                <li class="list-group-item"><strong>Writer:</strong> {{ writer }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

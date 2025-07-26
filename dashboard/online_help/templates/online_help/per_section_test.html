@@ -1,0 +1,34 @@
+{% extends "online_help/base.html" %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/per_section.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<p><a href="{% url 'online_help:per_documentation_test' document_pk=document_pk %}">← Back to Document</a></p>
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">{{ section_name }}</h2>
+            <a href="{% url 'online_help:per_section_edit_test' section_pk=section_pk %}" class="btn btn-outline-dark btn-sm">Edit</a>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {% if tasks %}
+                    {% for sub_section, task in tasks %}
+                        <div>
+                            <h5 class="text-muted">
+                                <a href="{% url 'online_help:per_subsection_task_test' document_pk=document_pk section_pk=section_pk subsection_pk=task.id %}" class="hover-link text-muted">
+                                    {{ sub_section }}
+                                </a>
+                            </h5>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No tasks found for this section.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

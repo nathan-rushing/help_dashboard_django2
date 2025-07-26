@@ -1,0 +1,60 @@
+{% extends "online_help/base.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/per_section.css' %}">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<p><a href="{% url 'online_help:tasks_test' %}">← Back to Tasks</a></p>
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Radiant Documentation</h2>
+                {% if first_task_id %}
+                    <a href="{% url 'online_help:documentation_edit_test' %}" class="btn btn-outline-dark btn-sm">Edit</a>
+                {% endif %}
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <!-- create a loop here -->
+                {% for task in tasks %}
+                    <h5 class="text-muted">
+                        <a href="{% url 'online_help:per_documentation_test2' task.id %}" class="hover-link">{{ task.document }}</a>
+                    </h5>
+                {% empty %}
+                    <p>No documents found.</p>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function filterContent() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const headings = document.querySelectorAll(".scroll-box h5, .scroll-box p");
+    const tables = document.querySelectorAll("table");
+
+    headings.forEach((heading, index) => {
+        const table = tables[index];
+        const rows = table.querySelectorAll("tbody tr");
+        let tableHasMatch = false;
+
+        const headingMatch = heading.innerText.toLowerCase().includes(input);
+
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            const match = text.includes(input);
+            row.style.display = match ? "" : "none";
+            if (match) tableHasMatch = true;
+        });
+
+        heading.style.display = headingMatch || tableHasMatch ? "" : "none";
+        table.style.display = tableHasMatch ? "" : "none";
+    });
+}
+</script>
+
+{% endblock %}
