@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task, Writers, TaskWriter
+from .models import Task, Writers, TaskWriter, Document
 
 from django import forms
 from .models import Writers, Task
@@ -125,8 +125,11 @@ class AssignTaskForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        documents = Task.objects.values_list('document', flat=True).distinct()
-        self.fields['document'].choices = [('', 'Select document')] + [(doc, doc) for doc in documents]
+        # documents = Task.objects.values_list('document', flat=True).distinct()
+        # self.fields['document'].choices = [('', 'Select document')] + [(doc, doc) for doc in documents]
+
+        documents = Document.objects.filter(id__in=Task.objects.values_list('document', flat=True).distinct())
+        self.fields['document'].choices = [('', 'Select document')] + [(doc.id, doc.title) for doc in documents]
 
         self.fields['section'].choices = [('', 'Select section')]
         self.fields['sub_section'].choices = [('', 'Select subsection')]
