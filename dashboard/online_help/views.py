@@ -20,7 +20,6 @@ from .forms import (
     AddWriterForm, AssignTaskForm, AddSMEForm
 )
 
-
 @login_required
 def home_test(request):
     # Annotate to handle nulls and sort accordingly
@@ -738,3 +737,29 @@ def load_subsections(request):
     section = request.GET.get('section')
     subsections = Task.objects.filter(section=section).values_list('sub_section', flat=True).distinct()
     return JsonResponse(list(subsections), safe=False)
+
+
+
+from .models import Task, Document
+from django.db.models import F
+
+@login_required
+def view_all(request):
+    document_id = request.GET.get('document')
+    color = request.GET.get('color')
+
+    tasks = Task.objects.select_related('document')
+
+    if document_id:
+        tasks = tasks.filter(document_id=document_id)
+    if color:
+        tasks = tasks.filter(color=color)
+
+    documents = Document.objects.all()
+    colors = Task.objects.values_list('color', flat=True).distinct()
+
+    return render(request, 'online_help/view_all.html', {
+        'tasks': tasks,
+        'documents': documents,
+        'colors': colors,
+    })

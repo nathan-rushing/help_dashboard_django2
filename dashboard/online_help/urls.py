@@ -51,4 +51,6 @@ urlpatterns = [
     path('ajax/load-subsections/', views.load_subsections, name='ajax_load_subsections'),
 
     path('export-taskwriters/', views.export_taskwriters_excel, name='export_taskwriters_excel'),
+
+    path('view_all/', views.view_all, name='view_all'),
 ]
