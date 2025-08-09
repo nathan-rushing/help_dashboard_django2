@@ -282,7 +282,8 @@ def per_section_test(request, document_pk, section_pk):
 
 
 @login_required
-def per_section_test2(request, document_pk, section_pk):
+# def per_section_test2(request, document_pk, section_pk): // tinanggal ko kasi nage-error kapag nanjan yung document pk. For section link only. remove na lang pag di na need yung feature na yun
+def per_section_test2(request, section_pk):
     reference_task = get_object_or_404(Task, pk=section_pk)
     document_name = reference_task.document
     section_name = reference_task.section
@@ -762,4 +763,94 @@ def view_all(request):
         'tasks': tasks,
         'documents': documents,
         'colors': colors,
+    })
+
+# views.py
+from django.shortcuts import get_object_or_404, redirect
+from .forms import RenameDocumentForm, RenameSectionForm, RenameSubSectionForm
+
+@login_required
+def rename_document(request, document_pk):
+    document = get_object_or_404(Document, pk=document_pk)
+
+    if request.method == 'POST':
+        form = RenameDocumentForm(request.POST, instance=document)
+        if form.is_valid():
+            form.save()
+            return redirect('online_help:documentation_edit_test')  # back to list
+    else:
+        form = RenameDocumentForm(instance=document)
+
+    return render(request, 'online_help/rename_document.html', {'form': form, 'document': document})
+
+@login_required
+def rename_section(request, task_pk):
+    task = get_object_or_404(Task, pk=task_pk)
+    document = task.document
+    old_section_name = task.section  # store old section before any change
+
+    if request.method == 'POST':
+        form = RenameSectionForm(request.POST, instance=task)
+        if form.is_valid():
+            new_section_name = form.cleaned_data['section']
+
+            # Update all tasks with the old section name in the same document
+            Task.objects.filter(document=document, section=old_section_name).update(section=new_section_name)
+
+            # Get one task from this document to pass as document_pk
+            first_task_in_doc = Task.objects.filter(document=document).first()
+
+            return redirect('online_help:section_edit_test', document_pk=first_task_in_doc.pk)
+    else:
+        form = RenameSectionForm(instance=task)
+
+    return render(request, 'online_help/rename_section.html', {
+        'form': form,
+        'document': document,
+        'old_section': old_section_name,
+    })
+
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import Task
+from .forms import RenameSubSectionForm
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def rename_subsection(request, task_pk):
+    # the task representing the specific subsection row the user clicked Rename on
+    task = get_object_or_404(Task, pk=task_pk)
+    document = task.document
+    section = task.section
+    old_subsection_name = task.sub_section  # store old name before any changes
+
+    if request.method == 'POST':
+        form = RenameSubSectionForm(request.POST, instance=task)
+        if form.is_valid():
+            new_subsection_name = form.cleaned_data['sub_section']
+
+            # update every Task that matches the same document+section+old subsection
+            Task.objects.filter(
+                document=document,
+                section=section,
+                sub_section=old_subsection_name
+            ).update(sub_section=new_subsection_name)
+
+            # find a representative Task for this section to use as section_pk
+            section_task = Task.objects.filter(document=document, section=section).first()
+            section_pk = section_task.pk if section_task else task.pk
+
+            return redirect('online_help:per_section_edit_test', section_pk=section_pk)
+    else:
+        form = RenameSubSectionForm(instance=task)
+
+    # make sure template always gets a sensible section_pk for the Cancel link
+    section_task = Task.objects.filter(document=document, section=section).first()
+    section_pk = section_task.pk if section_task else task.pk
+
+    return render(request, 'online_help/rename_subsection.html', {
+        'form': form,
+        'document': document,
+        'section': section,
+        'old_subsection': old_subsection_name,
+        'section_pk': section_pk,   # <-- pass this to template
     })

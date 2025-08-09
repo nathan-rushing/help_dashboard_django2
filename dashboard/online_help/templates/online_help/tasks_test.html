@@ -40,7 +40,7 @@
                             <tr>
                                 <td style="border: 1px solid #444; padding: 8px; background-color: {{ tw.task.color }};">{{ tw.writer.writer_name }}</td>
                                 <td style="border: 1px solid #444; padding: 8px; background-color: {{ tw.task.color }};">
-                                    {{ tw.task.section }}
+                                    <a href="{% url 'online_help:per_section_test2' tw.task.pk %}" class="hover-link">{{ tw.task.section }}</a>
                                     <!-- ito sana yan kapag hindi disabled url 'online_help:per_section_test2' tw.task.pk -->
                                 </td>
                                 <td style="border: 1px solid #444; padding: 8px; background-color: {{ tw.task.color }};">

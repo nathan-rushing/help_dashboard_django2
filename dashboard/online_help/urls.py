@@ -53,4 +53,10 @@ urlpatterns = [
     path('export-taskwriters/', views.export_taskwriters_excel, name='export_taskwriters_excel'),
 
     path('view_all/', views.view_all, name='view_all'),
+
+    # rename the item in document, section, and subsection
+    path('documents/<int:document_pk>/rename/', views.rename_document, name='rename_document'),
+    path('sections/<int:task_pk>/rename/', views.rename_section, name='rename_section'),
+    path('subsections/<int:task_pk>/rename/', views.rename_subsection, name='rename_subsection'),
+
 ]

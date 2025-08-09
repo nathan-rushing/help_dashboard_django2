@@ -1,0 +1,10 @@
+{% extends "online_help/base.html" %}
+{% block content %}
+<h2>Rename Section: {{ old_section }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+    <a href="{% url 'online_help:section_edit_test' document_pk=document.id %}" class="btn btn-secondary btn-sm">Cancel</a>
+</form>
+{% endblock %}

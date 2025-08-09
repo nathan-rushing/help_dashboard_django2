@@ -146,3 +146,29 @@ class AssignTaskForm(forms.Form):
 
 class AddSMEForm(forms.Form):
     sme = forms.CharField(label="Enter SME Name", max_length=255)
+
+class RenameDocumentForm(forms.ModelForm):
+    class Meta:
+        model = Document
+        fields = ['title']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'New document name'}),
+        }
+
+# forms.py
+class RenameSectionForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['section']
+        widgets = {
+            'section': forms.TextInput(attrs={'placeholder': 'New section name'}),
+        }
+
+# forms.py
+class RenameSubSectionForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['sub_section']
+        widgets = {
+            'sub_section': forms.TextInput(attrs={'placeholder': 'New subsection name'}),
+        }
